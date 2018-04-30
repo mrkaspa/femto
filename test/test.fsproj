@@ -9,6 +9,7 @@
     <Compile Include="ChangesetTests.fs" />
     <Compile Include="Tests.fs" />
     <Compile Include="Main.fs" />
+    <Content Include="App.config" />
   </ItemGroup>
 
   <ItemGroup>
