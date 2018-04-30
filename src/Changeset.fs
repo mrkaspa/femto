@@ -1,15 +1,17 @@
 namespace Femto
 
 module Changeset =
+    type FieldName = FieldName of string
+
+    type ErrMessage = ErrMessage of string
+
+    type ValidateFunc<'T> = 'T -> bool
 
     type Validation<'T> = {
         func: ValidateFunc<'T>
         field: FieldName
         errMsg: ErrMessage
     }
-    and FieldName = FieldName of string
-    and ErrMessage = ErrMessage of string
-    and ValidateFunc<'T> = 'T -> bool
 
     type Changeset<'T> = {
         data: 'T
