@@ -21,8 +21,10 @@ module Changeset =
     }
 
     let cast (parameters: Map<string, obj>) (attributes: List<string>) (model: 'T) =
-        let filter k _ = List.contains k attributes
-        let valuesFiltered = Map.filter filter parameters
+        let filter k _ =
+            List.contains k attributes
+        let valuesFiltered =
+            Map.filter filter parameters
 
         {
             data = TypeUtils.updateModel valuesFiltered model
@@ -45,7 +47,7 @@ module Changeset =
     let validate changeset =
         let foldFunc
             (valid, errors)
-            { func = func; field = FieldName fieldName; errMsg = ErrMessage errMsg } =
+            {func = func; field = FieldName fieldName; errMsg = ErrMessage errMsg} =
             if func changeset.data then
                 (false, Map.add fieldName errMsg errors)
             else
