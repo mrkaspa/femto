@@ -48,12 +48,12 @@ module Changeset =
 
     let validate changeset =
         let foldFunc
-            (valid, errors)
-            {func = func; field = FieldName fieldName; errMsg = ErrMessage errMsg} =
+            ( valid, errors )
+            { func = func; field = FieldName fieldName; errMsg = ErrMessage errMsg } =
             if func changeset.data then
-                (false, Map.add fieldName errMsg errors)
+                ( false, Map.add fieldName errMsg errors )
             else
-                (valid, errors)
+                ( valid, errors )
 
         let (valid, errors) =
             changeset.validations
