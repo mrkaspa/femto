@@ -4,6 +4,8 @@ module UserSchema =
     open Femto
 
     type User = {
+        [<Changeset.ID>]
+        id: int
         name: string
         age: int
     }
@@ -27,14 +29,14 @@ open UserSchema
 let tests =
     testList "Changeset" [
         testCase "Updates the data on cast" <| fun _ ->
-            let user = { name = "demo"; age = 21 }
+            let user = { id = 1; name = "demo"; age = 21 }
             let parameters = Map.ofList ["name", "michel" :> obj]
             let ch = UserSchema.changeset user parameters
             Expect.isTrue (ch.data.name = "michel") "changes name"
             Expect.isTrue (user.name = "demo") "does not change name"
 
         testCase "Validates a changeset" <| fun _ ->
-            let user = { name = ""; age = 18 }
+            let user = { id = 1; name = ""; age = 18 }
             let parameters = Map.ofList ["name", "michel" :> obj]
             let ch = UserSchema.changeset user parameters
             Expect.isFalse ch.valid.Value "invalid changeset"

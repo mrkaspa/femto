@@ -1,6 +1,9 @@
 namespace Femto
 
 module Changeset =
+    type ID() =
+        inherit System.Attribute()
+
     type FieldName = FieldName of string
 
     type ErrMessage = ErrMessage of string
