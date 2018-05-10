@@ -1,7 +1,5 @@
 module ChangesetTests
 
-open Expecto
-
 module UserSchema =
     open Femto
 
@@ -23,6 +21,7 @@ module UserSchema =
             "should not be empty"
         |> Changeset.validate
 
+open Expecto
 open UserSchema
 
 let tests =
