@@ -10,7 +10,6 @@
     <PackageReference Include="Expecto" Version="8.*" />
     <PackageReference Include="FSharp.Core" Version="4.*" />
     <PackageReference Include="YoloDev.Expecto.TestSdk" Version="0.*" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.*" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,7 +19,7 @@
   <ItemGroup>
     <Compile Include="ChangesetTests.fs" />
     <Compile Include="Tests.fs" />
-    <Compile Include="Program.fs" />
+    <Compile Include="Main.fs" />
   </ItemGroup>
 
 </Project>
