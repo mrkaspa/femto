@@ -12,5 +12,5 @@ module Repo =
     // let remove id =
     //     ()
 
-    // let get<'T> id : 'T =
-    //     () :> 'T
+    let get<'T> id : 'T =
+        () :> 'T

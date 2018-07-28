@@ -17,7 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="UserSchema.fs" />
     <Compile Include="ChangesetTests.fs" />
+    <Compile Include="RepoTests.fs" />
     <Compile Include="Tests.fs" />
     <Compile Include="Main.fs" />
   </ItemGroup>

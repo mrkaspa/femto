@@ -5,10 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="DBUtils.fs" />
     <Compile Include="TypeUtils.fs" />
     <Compile Include="Changeset.fs" />
     <Compile Include="Repo.fs" />
     <Compile Include="Library.fs" />
+  </ItemGroup>
+
+   <ItemGroup>
+    <PackageReference Include="Dapper" Version="1.50.2" />
+    <PackageReference Include="Npgsql" Version="3.2.5" />
   </ItemGroup>
 
 </Project>

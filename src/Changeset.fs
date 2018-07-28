@@ -1,9 +1,10 @@
 namespace Femto
 
-module Changeset =
+module Model =
     type ID() =
         inherit System.Attribute()
 
+module Changeset =
     type FieldName = FieldName of string
 
     type ErrMessage = ErrMessage of string
