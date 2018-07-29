@@ -17,7 +17,8 @@ module Repo =
 
     let get<'T> conn id =
         let tableName = getTableName<'T> ()
-        let query = sprintf "select * from %s where id = @Id" tableName
+        let idName = getIdName<'T> ()
+        let query = sprintf "select * from %s where %s = @Id" tableName idName
         let res =
             ["Id" => id]
             |> buildArgs
