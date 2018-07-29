@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <Compile Include="UserSchema.fs" />
+    <Compile Include="ModelTests.fs" />
     <Compile Include="ChangesetTests.fs" />
     <Compile Include="RepoTests.fs" />
     <Compile Include="Tests.fs" />

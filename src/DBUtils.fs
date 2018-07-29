@@ -8,8 +8,10 @@ module DBUtils =
     type Dict<'K, 'V> = System.Collections.Generic.IDictionary<'K, 'V>
 
     let inline ($) f x = f x
+
     let inline (=>) k v = (k, box v)
-    let buildArgs args = Some $ dict args
+
+    let inline buildArgs args = Some $ dict args
 
     let envVars =
         System.Environment.GetEnvironmentVariables()

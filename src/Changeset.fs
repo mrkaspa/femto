@@ -1,9 +1,5 @@
 namespace Femto
 
-module Model =
-    type ID() =
-        inherit System.Attribute()
-
 module Changeset =
     type FieldName = FieldName of string
 

@@ -7,6 +7,7 @@
   <ItemGroup>
     <Compile Include="DBUtils.fs" />
     <Compile Include="TypeUtils.fs" />
+    <Compile Include="Model.fs" />
     <Compile Include="Changeset.fs" />
     <Compile Include="Repo.fs" />
     <Compile Include="Library.fs" />

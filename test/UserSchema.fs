@@ -2,8 +2,9 @@ module UserSchema
 
 open Femto
 
+[<Model.Table(Name="users", Pk="id")>]
 type User = {
-    [<Model.ID>]
+    [<Model.ID(Name="user_id")>]
     id: int
     name: string
     age: int

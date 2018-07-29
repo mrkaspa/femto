@@ -3,6 +3,7 @@ module ChangesetTests
 open Expecto
 open UserSchema
 
+[<Tests>]
 let tests =
     testList "Changeset" [
         testCase "Updates the data on cast" <| fun _ ->
