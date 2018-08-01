@@ -15,10 +15,13 @@ module Repo =
     // let remove id =
     //     ()
 
-    let get<'T> conn id =
+    let getQuery<'T> () =
         let tableName = getTableName<'T> ()
         let idName = getIdName<'T> ()
-        let query = sprintf "select * from %s where %s = @Id" tableName idName
+        sprintf "select * from %s where %s = @Id" tableName idName
+
+    let get<'T> conn id =
+        let query = getQuery<'T> ()
         let res =
             ["Id" => id]
             |> buildArgs
