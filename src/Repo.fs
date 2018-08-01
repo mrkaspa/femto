@@ -4,7 +4,16 @@ open DBUtils
 open Model
 
 module Repo =
+    module Queries =
+        // let insertQuery
+
+        let getQuery<'T> () =
+            let tableName = getTableName<'T> ()
+            let idName = getIdName<'T> ()
+            sprintf "select * from %s where %s = @Id" tableName idName
+
     open Changeset
+    open Queries
 
     // let insert changeset =
     //     ()
@@ -14,11 +23,6 @@ module Repo =
 
     // let remove id =
     //     ()
-
-    let getQuery<'T> () =
-        let tableName = getTableName<'T> ()
-        let idName = getIdName<'T> ()
-        sprintf "select * from %s where %s = @Id" tableName idName
 
     let get<'T> conn id =
         let query = getQuery<'T> ()
