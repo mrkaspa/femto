@@ -5,7 +5,8 @@ open Model
 
 module Repo =
     module Queries =
-        // let insertQuery
+        let insertQuery<'T> () =
+            ""
 
         let getQuery<'T> () =
             let tableName = getTableName<'T> ()
