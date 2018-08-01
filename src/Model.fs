@@ -24,6 +24,9 @@ module Model =
             with get() = nameMut
             and set(value) = nameMut <- value
 
+    type Virtual() =
+        inherit System.Attribute()
+
     let tableType = typeof<Table>
 
     let idType = typeof<ID>
