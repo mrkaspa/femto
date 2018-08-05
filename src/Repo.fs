@@ -6,23 +6,41 @@ open Model
 module Repo =
     module Queries =
         let insertQuery<'T> () =
+            let genFields fields =
+                let strFields = String.concat ", " fields
+                let strFieldsPlaceholders =
+                    fields
+                    |> List.map (fun str -> "@" +  str)
+                    |> String.concat ", "
+                (strFields, strFieldsPlaceholders)
             let tableName = getTableName<'T> ()
-            sprintf "insert into %s () values ()" tableName
+            let fields = getFields<'T> ()
+            let (strFields, strFieldsPlaceholders) = genFields fields
+            sprintf
+                "insert into %s (%s) values (%s)"
+                tableName strFields strFieldsPlaceholders
 
         let updateQuery<'T> () =
             let tableName = getTableName<'T> ()
             let idName = getIdName<'T> ()
-            sprintf "update %s set () values () where %s = @Id" tableName idName
+            let fields = getFields<'T> ()
+            let strFieldsWithPlaceholders =
+                fields
+                |> List.map (fun str -> str + " = @" +  str)
+                |> String.concat ", "
+            sprintf
+                "update %s set (%s) where %s = @%s"
+                tableName strFieldsWithPlaceholders idName idName
 
         let deleteQuery<'T> () =
             let tableName = getTableName<'T> ()
             let idName = getIdName<'T> ()
-            sprintf "delete from %s where %s = @Id" tableName idName
+            sprintf "delete from %s where %s = @%s" tableName idName idName
 
         let getQuery<'T> () =
             let tableName = getTableName<'T> ()
             let idName = getIdName<'T> ()
-            sprintf "select * from %s where %s = @Id" tableName idName
+            sprintf "select * from %s where %s = @%s" tableName idName idName
 
     open Changeset
     open Queries

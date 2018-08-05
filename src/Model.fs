@@ -52,6 +52,15 @@ module Model =
                 with get() = nameMut
                 and set(value) = nameMut <- value
 
+        type Column() =
+            inherit System.Attribute()
+
+            let mutable nameMut = ""
+
+            member __.Name
+                with get() = nameMut
+                and set(value) = nameMut <- value
+
         type Virtual() =
             inherit System.Attribute()
 
@@ -94,7 +103,8 @@ module Model =
         let mutable fieldsArr = List.empty<string>
         while fields.MoveNext() do
             let field = fields.Current :?> System.Reflection.PropertyInfo
-            let attrs = field.CustomAttributes.GetEnumerator()
-            if not (hasAttr attrs virtualType) then
+            let attrs1 = field.CustomAttributes.GetEnumerator()
+            let attrs2 = field.CustomAttributes.GetEnumerator()
+            if not (hasAttr attrs1 virtualType) && not (hasAttr attrs2 idType) then
                 fieldsArr <- field.Name :: fieldsArr
         fieldsArr
