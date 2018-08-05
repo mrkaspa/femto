@@ -21,22 +21,19 @@ module DBUtils =
 
     let dbQuery<'T> (connection : NpgsqlConnection) sql
         (parameters : Option<Dict<string, obj>>) =
-        match parameters with
-        | Some p ->
-            let expando = ExpandoObject()
-            let expandoDictionary = expando :> Dict<string, obj>
-            for paramValue in p do
-                expandoDictionary.Add(paramValue.Key, paramValue.Value)
-            connection.Query<'T>(sql, expandoDictionary)
-        | None -> connection.Query<'T>(sql)
+        try
+            match parameters with
+            | Some p ->
+                let expando = ExpandoObject()
+                let expandoDictionary = expando :> Dict<string, obj>
+                for paramValue in p do
+                    expandoDictionary.Add(paramValue.Key, paramValue.Value)
+                Ok (connection.Query<'T>(sql, expandoDictionary))
+            | None -> Ok (connection.Query<'T>(sql))
+        with err ->
+            Error err
 
-    let withConn doFunc connString =
+    let withConn connString doFunc =
         use conn = new NpgsqlConnection(connString)
         conn.Open()
         doFunc conn
-
-    let getFirstResult conn query args =
-        let res = dbQuery<int> conn query args
-        res
-        |> List.ofSeq
-        |> List.tryHead

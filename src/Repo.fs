@@ -1,9 +1,9 @@
 namespace Femto
 
-open DBUtils
-open Model
 
 module Repo =
+    open Model
+
     module Queries =
         let insertQuery<'T> () =
             let genFields fields =
@@ -17,7 +17,7 @@ module Repo =
             let fields = getFields<'T> ()
             let (strFields, strFieldsPlaceholders) = genFields fields
             sprintf
-                "insert into %s (%s) values (%s)"
+                "insert into %s (%s) values (%s) returning *"
                 tableName strFields strFieldsPlaceholders
 
         let updateQuery<'T> () =
@@ -42,6 +42,7 @@ module Repo =
             let idName = getIdName<'T> ()
             sprintf "select * from %s where %s = @%s" tableName idName idName
 
+    open DBUtils
     open Changeset
     open Queries
 
@@ -51,7 +52,7 @@ module Repo =
     let update changeset =
         ()
 
-    let remove id =
+    let remove conn id =
         ()
 
     let get<'T> conn id =
@@ -59,8 +60,13 @@ module Repo =
             | fst::_ -> Some fst
             | _ -> None
         let query = getQuery<'T> ()
-        ["Id" => id]
+        let idName = getIdName<'T> ()
+
+        [idName => id]
         |> buildArgs
         |> dbQuery<'T> conn query
-        |> List.ofSeq
-        |> macthRes
+        |> Result.bind (
+            List.ofSeq
+            >> macthRes
+            >> Ok
+        )
