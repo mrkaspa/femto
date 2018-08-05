@@ -13,4 +13,7 @@ let tests =
         testCase "Gets table id" <| fun _ ->
             let idName = getIdName<User> ()
             Expect.isTrue (idName = "user_id") "same id name"
+        testCase "" <| fun _ ->
+            let fields = getFields<User> ()
+            Expect.isTrue (fields = ["age"; "name"; "id"]) "same fields"
     ]

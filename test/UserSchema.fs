@@ -1,10 +1,11 @@
 module UserSchema
 
 open Femto
+open Model
 
-[<Model.Table(Name="users", Pk="id")>]
+[<Meta.Table(Name="users", Pk="id")>]
 type User = {
-    [<Model.ID(Name="user_id")>]
+    [<Meta.ID(Name="user_id")>]
     id: int
     name: string
     age: int

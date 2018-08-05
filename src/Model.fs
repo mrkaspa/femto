@@ -1,51 +1,68 @@
 namespace Femto
 
 module Model =
-    type Table() =
-        inherit System.Attribute()
+    module ReflectionUtils =
+        let findValuesInAttr
+            (attrs : System.Collections.Generic.IEnumerator<System.Reflection.CustomAttributeData>)
+            (tag : System.Type)
+            (values : List<string>) =
+            let mutable res = Map.empty
+            while attrs.MoveNext() do
+                let attr = attrs.Current
+                if attr.AttributeType = tag then
+                    let args = attr.NamedArguments.GetEnumerator()
+                    while args.MoveNext() do
+                        let arg = args.Current
+                        if List.contains arg.MemberName values then
+                            let value = arg.TypedValue.Value :?> string
+                            res <- res.Add(arg.MemberName, value)
+            res
 
-        let mutable nameMut = ""
-        let mutable pkMut = ""
+        let hasAttr
+            (attrs : System.Collections.Generic.IEnumerator<System.Reflection.CustomAttributeData>)
+            (tag : System.Type) =
+            let mutable breakCond = false
+            while attrs.MoveNext() && not breakCond do
+                let attr = attrs.Current
+                if attr.AttributeType = tag then
+                    breakCond <- true
+            breakCond
 
-        member __.Name
-            with get() = nameMut
-            and set(value) = nameMut <- value
+    module Meta =
+        type Table() =
+            inherit System.Attribute()
 
-        member __.Pk
-            with get() = pkMut
-            and set(value) = pkMut <- value
+            let mutable nameMut = ""
+            let mutable pkMut = ""
 
-    type ID() =
-        inherit System.Attribute()
+            member __.Name
+                with get() = nameMut
+                and set(value) = nameMut <- value
 
-        let mutable nameMut = ""
+            member __.Pk
+                with get() = pkMut
+                and set(value) = pkMut <- value
 
-        member __.Name
-            with get() = nameMut
-            and set(value) = nameMut <- value
+        type ID() =
+            inherit System.Attribute()
 
-    type Virtual() =
-        inherit System.Attribute()
+            let mutable nameMut = ""
 
-    let tableType = typeof<Table>
+            member __.Name
+                with get() = nameMut
+                and set(value) = nameMut <- value
 
-    let idType = typeof<ID>
+        type Virtual() =
+            inherit System.Attribute()
 
-    let findValuesInAttr
-        (attrs : System.Collections.Generic.IEnumerator<System.Reflection.CustomAttributeData>)
-        (tag : System.Type)
-        (values : List<string>) =
-        let mutable res = Map.empty
-        while attrs.MoveNext() do
-            let attr = attrs.Current
-            if attr.AttributeType = tag then
-                let args = attr.NamedArguments.GetEnumerator()
-                while args.MoveNext() do
-                    let arg = args.Current
-                    if List.contains arg.MemberName values then
-                        let value = arg.TypedValue.Value :?> string
-                        res <- res.Add(arg.MemberName, value)
-        res
+        let tableType = typeof<Table>
+
+        let idType = typeof<ID>
+
+        let virtualType = typeof<Virtual>
+
+    open ReflectionUtils
+    open Meta
 
     let getTableName<'T> () =
         let ttype = typeof<'T>
@@ -70,3 +87,14 @@ module Model =
                 idColumn <- value
             | None -> ()
         idColumn
+
+    let getFields<'T> () =
+        let ttype = typeof<'T>
+        let fields = ttype.GetProperties().GetEnumerator()
+        let mutable fieldsArr = List.empty<string>
+        while fields.MoveNext() do
+            let field = fields.Current :?> System.Reflection.PropertyInfo
+            let attrs = field.CustomAttributes.GetEnumerator()
+            if not (hasAttr attrs virtualType) then
+                fieldsArr <- field.Name :: fieldsArr
+        fieldsArr
