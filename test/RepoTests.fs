@@ -39,11 +39,9 @@ let tests =
             |> Result.bind (fun connURL ->
                 withConn connURL (fun conn ->
                     let query = Queries.insertQuery<User> ()
-                    let res = dbQuery<obj> conn "query" (buildArgs ["name" => "Michel"; "age" => 21])
-                    printfn "RES >> %A" res
+                    let res = dbQuery<obj> conn query (buildArgs ["name" => "Michel"; "age" => 21])
                     let query = Queries.getQuery<User> ()
                     let res = dbQuery<obj> conn query (buildArgs ["user_id" => 3])
-                    printfn "RES >> %A" res
                     Ok res
                 )
             )
