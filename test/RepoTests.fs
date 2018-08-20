@@ -24,17 +24,18 @@ let tests =
 
         testCase "insertQuery" <| fun _ ->
             let query = Queries.insertQuery<User> ()
-            Expect.isTrue (query = "insert into users (age, name) values (@age, @name)") "Query generated"
+            printfn "%s" query
+            Expect.isTrue (query = "insert into users (age, name) values (@age, @name) returning *") "Insert generated"
 
         testCase "updateQuery" <| fun _ ->
             let query = Queries.updateQuery<User> ()
-            Expect.isTrue (query = "update users set (age = @age, name = @name) where user_id = @user_id") "Query generated"
+            Expect.isTrue (query = "update users set (age = @age, name = @name) where user_id = @user_id") "Update generated"
 
         testCase "deleteQuery" <| fun _ ->
             let query = Queries.deleteQuery<User> ()
-            Expect.isTrue (query = "delete from users where user_id = @user_id") "Query generated"
+            Expect.isTrue (query = "delete from users where user_id = @user_id") "Delete generated"
 
-        ftestCase "Inserting an user" <| fun _ ->
+        testCase "Inserting an user" <| fun _ ->
             getDbURL ()
             |> Result.bind (fun connURL ->
                 withConn connURL (fun conn ->
