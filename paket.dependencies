@@ -1,0 +1,6 @@
+source https://www.nuget.org/api/v2
+nuget Dapper 1.50.2
+nuget Expecto >= 8.0
+nuget FSharp.Core >= 4.0
+nuget Npgsql 3.2.5
+nuget YoloDev.Expecto.TestSdk
