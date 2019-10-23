@@ -19,8 +19,7 @@ module DBUtils =
         |> Seq.map (fun d -> (d.Key :?> string, d.Value :?> string))
         |> dict
 
-    let dbQuery<'T> (connection : NpgsqlConnection) sql
-        (parameters : Option<Dict<string, obj>>) =
+    let dbQuery<'T> (connection: NpgsqlConnection) sql (parameters: Option<Dict<string, obj>>) =
         try
             match parameters with
             | Some p ->
@@ -28,10 +27,9 @@ module DBUtils =
                 let expandoDictionary = expando :> Dict<string, obj>
                 for paramValue in p do
                     expandoDictionary.Add(paramValue.Key, paramValue.Value)
-                Ok (connection.Query<'T>(sql, expandoDictionary))
-            | None -> Ok (connection.Query<'T>(sql))
-        with err ->
-            Error err
+                Ok(connection.Query<'T>(sql, expandoDictionary))
+            | None -> Ok(connection.Query<'T>(sql))
+        with err -> Error err
 
     let withConn connString doFunc =
         use conn = new NpgsqlConnection(connString)

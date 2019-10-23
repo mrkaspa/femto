@@ -2,10 +2,8 @@ namespace Femto
 
 module Model =
     module ReflectionUtils =
-        let findValuesInAttr
-            (attrs : System.Collections.Generic.IEnumerator<System.Reflection.CustomAttributeData>)
-            (tag : System.Type)
-            (values : List<string>) =
+        let findValuesInAttr (attrs: System.Collections.Generic.IEnumerator<System.Reflection.CustomAttributeData>)
+            (tag: System.Type) (values: List<string>) =
             let mutable res = Map.empty
             while attrs.MoveNext() do
                 let attr = attrs.Current
@@ -18,14 +16,12 @@ module Model =
                             res <- res.Add(arg.MemberName, value)
             res
 
-        let hasAttr
-            (attrs : System.Collections.Generic.IEnumerator<System.Reflection.CustomAttributeData>)
-            (tag : System.Type) =
+        let hasAttr (attrs: System.Collections.Generic.IEnumerator<System.Reflection.CustomAttributeData>)
+            (tag: System.Type) =
             let mutable breakCond = false
             while attrs.MoveNext() && not breakCond do
                 let attr = attrs.Current
-                if attr.AttributeType = tag then
-                    breakCond <- true
+                if attr.AttributeType = tag then breakCond <- true
             breakCond
 
     module Meta =
@@ -36,12 +32,12 @@ module Model =
             let mutable pkMut = ""
 
             member __.Name
-                with get() = nameMut
-                and set(value) = nameMut <- value
+                with get () = nameMut
+                and set (value) = nameMut <- value
 
             member __.Pk
-                with get() = pkMut
-                and set(value) = pkMut <- value
+                with get () = pkMut
+                and set (value) = pkMut <- value
 
         type ID() =
             inherit System.Attribute()
@@ -49,8 +45,8 @@ module Model =
             let mutable nameMut = ""
 
             member __.Name
-                with get() = nameMut
-                and set(value) = nameMut <- value
+                with get () = nameMut
+                and set (value) = nameMut <- value
 
         type Column() =
             inherit System.Attribute()
@@ -58,8 +54,8 @@ module Model =
             let mutable nameMut = ""
 
             member __.Name
-                with get() = nameMut
-                and set(value) = nameMut <- value
+                with get () = nameMut
+                and set (value) = nameMut <- value
 
         type Virtual() =
             inherit System.Attribute()
@@ -73,15 +69,15 @@ module Model =
     open ReflectionUtils
     open Meta
 
-    let getTableName<'T> () =
+    let getTableName<'T>() =
         let ttype = typeof<'T>
         let attrs = ttype.CustomAttributes.GetEnumerator()
-        let res = findValuesInAttr attrs tableType ["Name"]
+        let res = findValuesInAttr attrs tableType [ "Name" ]
         match res.TryFind("Name") with
         | Some value -> value
         | None -> ttype.Name
 
-    let getIdName<'T> () =
+    let getIdName<'T>() =
         let ttype = typeof<'T>
         let fields = ttype.GetProperties().GetEnumerator()
         let mutable idColumn = "id"
@@ -89,7 +85,7 @@ module Model =
         while fields.MoveNext() && not foundCond do
             let field = fields.Current :?> System.Reflection.PropertyInfo
             let attrs = field.CustomAttributes.GetEnumerator()
-            let res = findValuesInAttr attrs idType ["Name"]
+            let res = findValuesInAttr attrs idType [ "Name" ]
             match res.TryFind("Name") with
             | Some value ->
                 foundCond <- true
@@ -97,7 +93,7 @@ module Model =
             | None -> ()
         idColumn
 
-    let getFields<'T> () =
+    let getFields<'T>() =
         let ttype = typeof<'T>
         let fields = ttype.GetProperties().GetEnumerator()
         let mutable fieldsArr = List.empty<string>
@@ -105,6 +101,5 @@ module Model =
             let field = fields.Current :?> System.Reflection.PropertyInfo
             let attrs1 = field.CustomAttributes.GetEnumerator()
             let attrs2 = field.CustomAttributes.GetEnumerator()
-            if not (hasAttr attrs1 virtualType) && not (hasAttr attrs2 idType) then
-                fieldsArr <- field.Name :: fieldsArr
+            if not (hasAttr attrs1 virtualType) && not (hasAttr attrs2 idType) then fieldsArr <- field.Name :: fieldsArr
         fieldsArr
