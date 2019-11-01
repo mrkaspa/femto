@@ -21,18 +21,26 @@ type Column(name) =
     member this.Name = name
 
 [<AbstractClass>]
-type Schema<'T>(name: string) =
-    member this.Name = name
-    member this.Column(name) = Column(name)
-    abstract Struct: unit -> 'T
+type Schema<'T, 'F>(name: string) =
+    member __.Name = name
+    abstract Struct: List<Column>
+    abstract Parser: 'F
 
-// type NewUser =
-//     { ID: string
-//       Name: string }
+type Repository<'T>(schema: Schema<'T, 'F`>) =
+    member this.Insert<'T>(t: 'T) = None
 
 type NewUser = NewUser of string * string
 
-type NewUserSchema() =
-    inherit Schema<NewUser>("demo")
-    member this.ID = this.Column("ID")
-    override __.Struct() = NewUser("1", "2")
+type NewUserFn = string -> string -> NewUser
+
+type NewUserSchema private () =
+    inherit Schema<NewUser, NewUserFn>("demo")
+    static let instance = NewUserSchema()
+    static member Instance = instance
+    member __.ID = Column("ID")
+    override this.Struct = [ this.ID ]
+    override this.Parser = fun str0 str1 -> NewUser(str0, str1)
+
+let newUserRepo = Repository(NewUserSchema.Instance)
+
+newUserRepo.Insert(NewUser("", ""))
