@@ -16,3 +16,23 @@ let changeset model parameters =
     |> Changeset.addValidation (fun u -> u.age < 20) "age" "should be greater than 20"
     |> Changeset.addValidation (fun u -> u.name <> "") "name" "should not be empty"
     |> Changeset.validate
+
+type Column(name) =
+    member this.Name = name
+
+[<AbstractClass>]
+type Schema<'T>(name: string) =
+    member this.Name = name
+    member this.Column(name) = Column(name)
+    abstract Struct: unit -> 'T
+
+// type NewUser =
+//     { ID: string
+//       Name: string }
+
+type NewUser = NewUser of string * string
+
+type NewUserSchema() =
+    inherit Schema<NewUser>("demo")
+    member this.ID = this.Column("ID")
+    override __.Struct() = NewUser("1", "2")
